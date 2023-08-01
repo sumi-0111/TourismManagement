@@ -9,7 +9,7 @@ namespace TourPackage.Models
             
         }
         public DbSet<TourPackage> TourPackages { get; set; }
-        public DbSet<ViaRoute> VViaRoutes { get; set; }
+        public DbSet<ViaRoute> VViaRoutes { get; set; } 
         public DbSet<Image>  Images { get; set; }
         public DbSet<ContactDetails>  Contacts { get; set; }
     }

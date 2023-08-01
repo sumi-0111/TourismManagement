@@ -8,10 +8,10 @@ namespace TourPackage.Models
         [Key]
         public int Id { get; set; }
 
-        
-
-        public string? ViaRouteDetail { get; set; }
+        [ForeignKey("TravelAgentId")]
+        public int TravelAgentId { get; set; }
+        public string? ViaRouteDetail { get; set; } 
         public TourPackage TourPackage { get; set; }
 
-    }
+    } 
 }

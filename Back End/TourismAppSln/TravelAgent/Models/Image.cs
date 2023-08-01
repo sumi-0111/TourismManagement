@@ -6,10 +6,12 @@ namespace TourPackage.Models
     public class Image
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
-        [ForeignKey("TravelAgentId")]
-        public string? TourPackageId { get; set; } 
+
+        [ForeignKey("TourPackage")]
+        public int TourId { get; set; }
         public string? ImageUrl { get; set; }
+        public TourPackage TourPackage { get; set; }
     }
 }
