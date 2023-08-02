@@ -95,7 +95,7 @@ namespace TourismApp.Services
                 user.UserId = travellerResult.TravellerId;
                 user.Role = userResult.Role;
                 user.Email = travellerResult.TravellerEmail;
-                user.Token = _tokenService.GenerateToken(user);
+                user.Token = _tokenService.GenerateToken(user); 
             }
 
             return user;
