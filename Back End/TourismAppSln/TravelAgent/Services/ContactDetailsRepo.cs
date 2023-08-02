@@ -9,16 +9,33 @@ namespace TourPackage.Services
     {
         private readonly TourPackageContext _context;
         private readonly ILogger<ContactDetails> _logger;
+        private readonly IWebHostEnvironment _environment;
 
-        public ContactDetailsRepo(TourPackageContext context,ILogger<ContactDetails> logger)
+        public ContactDetailsRepo(TourPackageContext context,ILogger<ContactDetails> logger,IWebHostEnvironment environment)
         {
             _context=context;
             _logger=logger;
+            _environment=environment;
         }
-        public async Task<ContactDetails?> Add(ContactDetails item)
+        public async Task<ContactDetails?> Add(ContactDetails item, IFormFile imageFile)
         {
             try
             {
+                // Save the image file to the specified location if it exists
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "ContactDetails");
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+
+                    item.MapImage = fileName;
+                }
+
                 _context.Contacts.Add(item);
                 await _context.SaveChangesAsync();
                 return item;
@@ -26,8 +43,8 @@ namespace TourPackage.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return null;
             }
-            return null;
         }
 
         public async Task<ContactDetails?> Delete(int key)
@@ -78,31 +95,47 @@ namespace TourPackage.Services
             return null;
         }
 
-        public async Task<ContactDetails?> Update(ContactDetails item)
+        public async Task<ContactDetails?> Update(ContactDetails item, IFormFile imageFile)
         {
-
             try
             {
-                var existingDoctor = await _context.Contacts.FindAsync(item.ContactId);
-                if (existingDoctor != null)
+                var existingContact = await _context.Contacts.FindAsync(item.ContactId);
+                if (existingContact != null)
                 {
-                    existingDoctor.Package = item.Package;
-                    existingDoctor.TravelAgentName = item.TravelAgentName;
-                    existingDoctor.Email = item.Email;
-                    existingDoctor.Phone = item.Phone;
-                    existingDoctor.Email = item.Email;
-                  
+                    existingContact.Package = item.Package;
+                    existingContact.TravelAgentName = item.TravelAgentName;
+                    existingContact.Email = item.Email;
+                    existingContact.Phone = item.Phone;
 
-                    await _context.SaveChangesAsync(); // Save the changes to the database
+                    // Save the new image file to the specified location if it exists
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        var uploadsFolder = Path.Combine(_environment.WebRootPath, "ContactDetails");
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                        var filePath = Path.Combine(uploadsFolder, fileName);
 
-                    return existingDoctor;
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+
+                        existingContact.MapImage = fileName;
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    return existingContact;
+                }
+                else
+                {
+                    return null;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return null;
             }
-            return null;
         }
     }
 }

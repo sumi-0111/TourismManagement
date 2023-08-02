@@ -18,5 +18,6 @@ namespace TourPackage.Models
 
         [Required] 
         public string? HotelFood { get; set; }
+        public string? HotelImage { get; set; }
     } 
 }

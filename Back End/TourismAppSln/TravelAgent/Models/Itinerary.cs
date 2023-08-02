@@ -21,8 +21,8 @@ namespace TourPackage.Models
         public string? DestinationDescription { get; set; }
         [Required]
         public string? FoodDetails { get; set; }
+      
 
-        public List<Image> Images { get; set; }
         public List<Hotel> Hotels { get; set; }
 
     } 

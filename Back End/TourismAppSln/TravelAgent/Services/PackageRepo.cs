@@ -9,16 +9,32 @@ namespace TourPackage.Services
     {
         private readonly TourPackageContext _context;
         private readonly ILogger<Package> _logger;
+        private readonly IWebHostEnvironment _environment;
 
-        public PackageRepo(TourPackageContext context, ILogger<Package> logger)
+        public PackageRepo(TourPackageContext context, ILogger<Package> logger,IWebHostEnvironment environment)
         {
             _context=context;
             _logger=logger;
+            _environment=environment;
         }
-        public async Task<Package?> Add(Package item)
+        public async Task<Package?> Add(Package item, IFormFile imageFile)
         {
             try
             {
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "Package");
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+
+                    item.PackageImage = fileName;
+                }
+
                 _context.Packages.Add(item);
                 await _context.SaveChangesAsync();
                 return item;
@@ -78,7 +94,7 @@ namespace TourPackage.Services
             return null;
         }
 
-        public async Task<Package?> Update(Package item)
+        public async Task<Package?> Update(Package item, IFormFile imageFile)
         {
             try
             {
@@ -91,13 +107,26 @@ namespace TourPackage.Services
                     existingDoctor.Rate = item.Rate;
                     existingDoctor.DeparturePoint = item.DeparturePoint;
                     existingDoctor.ArrivalPoint = item.ArrivalPoint;
-                    existingDoctor.Images = item.Images;
                     existingDoctor.AvailablityCount = item.AvailablityCount;
                     existingDoctor.TotalDays = item.TotalDays;
                     existingDoctor.Transportation = item.Transportation;
 
+                    // Save the new image file to the specified location if it exists
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        var uploadsFolder = Path.Combine(_environment.WebRootPath, "Package");
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                        var filePath = Path.Combine(uploadsFolder, fileName);
 
-                    await _context.SaveChangesAsync(); // Save the changes to the database
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+
+                        existingDoctor.PackageImage = fileName;
+                    }
+
+                    await _context.SaveChangesAsync();
 
                     return existingDoctor;
                 }

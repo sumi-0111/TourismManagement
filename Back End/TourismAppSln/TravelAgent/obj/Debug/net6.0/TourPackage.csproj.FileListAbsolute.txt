@@ -64,3 +64,10 @@ C:\Tourism\Back End\TourismAppSln\TravelAgent\obj\Debug\net6.0\refint\TourPackag
 C:\Tourism\Back End\TourismAppSln\TravelAgent\obj\Debug\net6.0\TourPackage.pdb
 C:\Tourism\Back End\TourismAppSln\TravelAgent\obj\Debug\net6.0\TourPackage.genruntimeconfig.cache
 C:\Tourism\Back End\TourismAppSln\TravelAgent\obj\Debug\net6.0\ref\TourPackage.dll
+C:\Tourism\Back End\TourismAppSln\TravelAgent\bin\Debug\net6.0\TourPackage.staticwebassets.runtime.json
+C:\Tourism\Back End\TourismAppSln\TravelAgent\bin\Debug\net6.0\Octokit.dll
+C:\Tourism\Back End\TourismAppSln\TravelAgent\bin\Debug\net6.0\Refit.dll
+C:\Tourism\Back End\TourismAppSln\TravelAgent\bin\Debug\net6.0\System.Net.Http.Json.dll
+C:\Tourism\Back End\TourismAppSln\TravelAgent\bin\Debug\net6.0\System.Text.Encodings.Web.dll
+C:\Tourism\Back End\TourismAppSln\TravelAgent\bin\Debug\net6.0\System.Text.Json.dll
+C:\Tourism\Back End\TourismAppSln\TravelAgent\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll

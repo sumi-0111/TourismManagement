@@ -8,18 +8,49 @@ namespace TourPackage.Services
     public class ItineraryRepo : IRepo<int, Itinerary>
     {
         private readonly TourPackageContext _context;
-        private readonly ILogger _logger;
+        private readonly ILogger _logger; 
+        private readonly IWebHostEnvironment _environment;
 
-        public ItineraryRepo(TourPackageContext tourPackageContext, ILogger<Itinerary> logger)
+        public ItineraryRepo(TourPackageContext tourPackageContext, ILogger<Itinerary> logger,IWebHostEnvironment environment)
         {
             _context=tourPackageContext;
             _logger= logger;
+            _environment=environment;
         }
-        public async Task<Itinerary?> Add(Itinerary item)
+        public async Task<Itinerary?> Add(Itinerary item, IFormFile imageFile, IFormFile secondImageFile)
         {
-
             try
             {
+                // Save the first image file to the specified location if it exists
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "Itinerary");
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+
+                    item.ItineraryImage = fileName;
+                }
+
+                // Save the second image file to the specified location if it exists
+                if (secondImageFile != null && secondImageFile.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "Food");
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(secondImageFile.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await secondImageFile.CopyToAsync(stream);
+                    }
+
+                    item.FoodImage = fileName;
+                }
+
                 _context.Itineraries.Add(item);
                 await _context.SaveChangesAsync();
                 return item;
@@ -27,9 +58,10 @@ namespace TourPackage.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return null;
             }
-            return null;
         }
+
 
         public async Task<Itinerary?> Delete(int key)
         {
@@ -79,31 +111,41 @@ namespace TourPackage.Services
             return null;
         }
 
-        public async Task<Itinerary?> Update(Itinerary item)
+        public async Task<Itinerary?> Update(IteneraryImages item)
         {
+            // Access images using item.ItineraryImageOne, item.ItineraryImageTwo, item.FoodImage
+            // Convert them to Base64 strings and store them in the corresponding properties of the existing Itinerary object
+
             try
             {
-                var existingDoctor = await _context.Itineraries.FindAsync(item.ItineraryId);
-                if (existingDoctor != null)
+                var existingItinerary = await _context.Itineraries.FindAsync(item.Itinerary.ItineraryId);
+                if (existingItinerary != null)
                 {
-                    existingDoctor.PackageName = item.PackageName;
-                    existingDoctor.Images = item.Images;
-                    existingDoctor.Hotels = item.Hotels;
-                    existingDoctor.FoodDetails = item.FoodDetails;
-                    existingDoctor.DestinationDescription = item.DestinationDescription;
-                    existingDoctor.DayandVisit = item.DayandVisit;
+                    existingItinerary.PackageName = item.Itinerary.PackageName;
+                    existingItinerary.Hotels = item.Itinerary.Hotels;
+                    existingItinerary.FoodDetails = item.Itinerary.FoodDetails;
+                    existingItinerary.DestinationDescription = item.Itinerary.DestinationDescription;
+                    existingItinerary.DayandVisit = item.Itinerary.DayandVisit;
+                    existingItinerary.ItineraryImageOne = item.ItineraryImageOne;
+                    existingItinerary.ItineraryImageTwo = item.ItineraryImageTwo;
+                    existingItinerary.FoodImage = item.FoodImage;
 
-                    await _context.SaveChangesAsync(); // Save the changes to the database
+                    await _context.SaveChangesAsync();
 
-                    return existingDoctor;
+                    return existingItinerary;
+                }
+                else
+                {
+                    return null;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return null;
             }
-            return null;
         }
+
     }
 }
 

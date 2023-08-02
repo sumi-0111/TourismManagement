@@ -23,12 +23,12 @@ namespace TourPackage.Models
 
         [Required]
         public string?  ArrivalPoint { get; set; } 
-        public List<Image>? Images { get; set; } 
         public int AvailablityCount { get; set; } 
         public int TotalDays { get; set; }
 
         [Required]
         public string? Transportation { get; set; }
+        public string? PackageImage { get; set; }
 
     }
 }

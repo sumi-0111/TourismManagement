@@ -10,16 +10,33 @@ namespace TourPackage.Services
     {
         private readonly TourPackageContext _context;
         private readonly ILogger<Hotel> _logger;
+        private readonly IWebHostEnvironment _environment;
 
-        public HotelRepo(TourPackageContext context, ILogger<Hotel> logger)
+        public HotelRepo(TourPackageContext context, ILogger<Hotel> logger,IWebHostEnvironment environment)
         {
             _context = context;
             _logger = logger;
+            _environment= environment;
         }
-        public async Task<Hotel?> Add(Hotel item)
+        public async Task<Hotel?> Add(Hotel item, IFormFile imageFile)
         {
             try
             {
+                // Save the image file to the specified location if it exists
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "Hotel");
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+
+                    item.HotelImage = fileName;
+                }
+
                 _context.Hotels.Add(item);
                 await _context.SaveChangesAsync();
                 return item;
@@ -27,8 +44,8 @@ namespace TourPackage.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return null;
             }
-            return null;
         }
 
         public async Task<Hotel?> Delete(int key)
@@ -79,30 +96,48 @@ namespace TourPackage.Services
             return null;
         }
 
-        public async Task<Hotel?> Update(Hotel item)
+        public async Task<Hotel?> Update(Hotel item, IFormFile imageFile)
         {
             try
             {
-                var existingDoctor = await _context.Hotels.FindAsync(item.HotelId);
-                if (existingDoctor != null)
+                var existingHotel = await _context.Hotels.FindAsync(item.HotelId);
+                if (existingHotel != null)
                 {
-                    existingDoctor.HotelName = item.HotelName;
-                    existingDoctor.Itinerary = item.Itinerary;
-                    existingDoctor.HotelRating = item.HotelRating;
-                    existingDoctor.RoomType = item.RoomType;
-                    existingDoctor.HotelFood = item.HotelFood;
-                    
+                    existingHotel.HotelName = item.HotelName;
+                    existingHotel.Itinerary = item.Itinerary;
+                    existingHotel.HotelRating = item.HotelRating;
+                    existingHotel.RoomType = item.RoomType;
+                    existingHotel.HotelFood = item.HotelFood;
 
-                    await _context.SaveChangesAsync(); // Save the changes to the database
+                    // Save the new image file to the specified location if it exists
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        var uploadsFolder = Path.Combine(_environment.WebRootPath, "Hotel");
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                        var filePath = Path.Combine(uploadsFolder, fileName);
 
-                    return existingDoctor;
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+
+                        existingHotel.HotelImage = fileName;
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    return existingHotel;
+                }
+                else
+                {
+                    return null;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return null;
             }
-            return null;
         }
     }
 }

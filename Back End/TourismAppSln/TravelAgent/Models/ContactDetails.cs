@@ -14,6 +14,8 @@ namespace TourPackage.Models
         public string? TravelAgentName { get; set; } 
         public string? Phone { get; set; } 
         public string? Email  { get; set; } 
+        public string? MapImage { get; set;}
     }
+
 }
     
