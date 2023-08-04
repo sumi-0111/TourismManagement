@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using TourPackage.Interfaces;
 using TourPackage.Models;
@@ -17,14 +18,14 @@ namespace TourPackage.Services
             _logger=logger;
             _environment=environment;
         }
-        public async Task<Package?> Add(Package item, IFormFile imageFile)
+        public async Task<Package?> Add([FromForm] Package item, IFormFile imageFile)
         {
-            try
+            try 
             {
                 if (imageFile != null && imageFile.Length > 0)
                 {
                     var uploadsFolder = Path.Combine(_environment.WebRootPath, "Package");
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    var fileName = imageFile.FileName;
                     var filePath = Path.Combine(uploadsFolder, fileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
@@ -34,6 +35,12 @@ namespace TourPackage.Services
 
                     item.PackageImage = fileName;
                 }
+                else
+                {
+                    // Handle the case when no image file is provided, or the file is invalid.
+                    // You can choose to throw an exception, return an error response, or set a default image, etc.
+                    throw new ArgumentException("Invalid image file.");
+                }
 
                 _context.Packages.Add(item);
                 await _context.SaveChangesAsync();
@@ -42,9 +49,10 @@ namespace TourPackage.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return null;
             }
-            return null;
         }
+
 
         public async Task<Package?> Delete(int key)
         {

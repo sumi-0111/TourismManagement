@@ -16,9 +16,9 @@ namespace TourPackage.Controllers
             _hotelRepo = hotelRepo;
         }
         [HttpPost]
-        public async Task<ActionResult<Hotel>> AddHotel(Hotel hotel)
+        public async Task<ActionResult<Hotel>> AddHotel([FromForm] Hotel hotel, [FromForm] IFormFile imageFile)
         {
-            var result = await _hotelRepo.Add(hotel);
+            var result = await _hotelRepo.Add(hotel, imageFile);
             if (result != null)
             {
                 return Ok(result);
@@ -26,15 +26,16 @@ namespace TourPackage.Controllers
             return BadRequest("Failed to add hotel.");
         }
 
+
         [HttpPut("{id}")]
-        public async Task<ActionResult<Hotel>> UpdateHotel(int id, Hotel hotel)
+        public async Task<ActionResult<Hotel>> UpdateHotel(int id, [FromForm] Hotel hotel, [FromForm] IFormFile imageFile)
         {
             if (id != hotel.HotelId)
             {
                 return BadRequest("Hotel ID mismatch.");
             }
 
-            var result = await _hotelRepo.Update(hotel);
+            var result = await _hotelRepo.Update(hotel, imageFile);
             if (result != null)
             {
                 return Ok(result);

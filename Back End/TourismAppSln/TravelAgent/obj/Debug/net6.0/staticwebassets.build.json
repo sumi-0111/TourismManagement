@@ -1,11 +1,71 @@
 {
   "Version": 1,
-  "Hash": "GexycwhkNtFfJecW8eKDK22V4UNYfNKWmF9kirUiiX4=",
+  "Hash": "GfFvrdbYDvSf09dnTeINRTUFH+6Q1dARHJj0Fh7Tpec=",
   "Source": "TourPackage",
   "BasePath": "_content/TourPackage",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "TourPackage\\wwwroot",
+      "Source": "TourPackage",
+      "ContentRoot": "C:\\Tourism\\Back End\\TourismAppSln\\TravelAgent\\wwwroot\\",
+      "BasePath": "_content/TourPackage",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Tourism\\Back End\\TourismAppSln\\TravelAgent\\wwwroot\\ContactDetails\\beach.jpeg",
+      "SourceId": "TourPackage",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Tourism\\Back End\\TourismAppSln\\TravelAgent\\wwwroot\\",
+      "BasePath": "_content/TourPackage",
+      "RelativePath": "ContactDetails/beach.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\ContactDetails\\beach.jpeg"
+    },
+    {
+      "Identity": "C:\\Tourism\\Back End\\TourismAppSln\\TravelAgent\\wwwroot\\Package\\70e8c617-91a0-470c-96de-f813ffd6c1d8.webp",
+      "SourceId": "TourPackage",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Tourism\\Back End\\TourismAppSln\\TravelAgent\\wwwroot\\",
+      "BasePath": "_content/TourPackage",
+      "RelativePath": "Package/70e8c617-91a0-470c-96de-f813ffd6c1d8.webp",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Package\\70e8c617-91a0-470c-96de-f813ffd6c1d8.webp"
+    },
+    {
+      "Identity": "C:\\Tourism\\Back End\\TourismAppSln\\TravelAgent\\wwwroot\\Package\\trucking.webp",
+      "SourceId": "TourPackage",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Tourism\\Back End\\TourismAppSln\\TravelAgent\\wwwroot\\",
+      "BasePath": "_content/TourPackage",
+      "RelativePath": "Package/trucking.webp",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Package\\trucking.webp"
+    }
+  ]
 }

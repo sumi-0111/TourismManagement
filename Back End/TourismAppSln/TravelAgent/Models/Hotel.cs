@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TourPackage.Models
 {
@@ -7,9 +8,10 @@ namespace TourPackage.Models
     {
         [Key]
         public int HotelId { get; set; }
-        [ForeignKey("id")] 
         public int ItineraryId { get; set; }
-        public Itinerary Itinerary { get; set; }
+        [ForeignKey("ItineraryId")]
+        [JsonIgnore]
+        public Itinerary? Itinerary { get; set; }
         public string? HotelName { get; set; }
         public int HotelRating { get; set; }
 

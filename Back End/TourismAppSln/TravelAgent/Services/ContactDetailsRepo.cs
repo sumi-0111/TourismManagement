@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using TourPackage.Interfaces;
 using TourPackage.Models;
@@ -17,15 +18,14 @@ namespace TourPackage.Services
             _logger=logger;
             _environment=environment;
         }
-        public async Task<ContactDetails?> Add(ContactDetails item, IFormFile imageFile)
+        public async Task<ContactDetails?> Add([FromForm] ContactDetails item, IFormFile imageFile)
         {
             try
             {
-                // Save the image file to the specified location if it exists
                 if (imageFile != null && imageFile.Length > 0)
                 {
                     var uploadsFolder = Path.Combine(_environment.WebRootPath, "ContactDetails");
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                    var fileName = imageFile.FileName;
                     var filePath = Path.Combine(uploadsFolder, fileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
@@ -34,6 +34,12 @@ namespace TourPackage.Services
                     }
 
                     item.MapImage = fileName;
+                }
+                else
+                {
+                    // Handle the case when no image file is provided, or the file is invalid.
+                    // You can choose to throw an exception, return an error response, or set a default image, etc.
+                    throw new ArgumentException("Invalid image file.");
                 }
 
                 _context.Contacts.Add(item);
@@ -46,6 +52,7 @@ namespace TourPackage.Services
                 return null;
             }
         }
+
 
         public async Task<ContactDetails?> Delete(int key)
         {

@@ -16,30 +16,32 @@ namespace TourPackage.Controllers
             _itineraryRepo = itineraryRepo;
         }
         [HttpPost]
-        public async Task<ActionResult<Itinerary>> AddItinerary(Itinerary itinerary)
+        public async Task<ActionResult<Itinerary>> AddItinerary([FromForm] Itinerary itinerary, [FromForm] IFormFile imageFile)
         {
-            var addedItinerary = await _itineraryRepo.Add(itinerary);
-            if (addedItinerary != null)
+            var result = await _itineraryRepo.Add(itinerary, imageFile);
+            if (result != null)
             {
-                return Ok(addedItinerary);
+                return Ok(result);
             }
             return BadRequest("Failed to add itinerary.");
         }
+
         [HttpPut("{id}")]
-        public async Task<ActionResult<Itinerary>> UpdateItinerary(int id, Itinerary itinerary)
+        public async Task<ActionResult<Itinerary>> UpdateItinerary(int id, [FromForm] Itinerary itinerary, [FromForm] IFormFile imageFile)
         {
             if (id != itinerary.ItineraryId)
             {
                 return BadRequest("Itinerary ID mismatch.");
             }
 
-            var updatedItinerary = await _itineraryRepo.Update(itinerary);
-            if (updatedItinerary != null)
+            var result = await _itineraryRepo.Update(itinerary, imageFile);
+            if (result != null)
             {
-                return Ok(updatedItinerary);
+                return Ok(result);
             }
             return NotFound("Itinerary not found.");
         }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult<Itinerary>> DeleteItinerary(int id)
         {

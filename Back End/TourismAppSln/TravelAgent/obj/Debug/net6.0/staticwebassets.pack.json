@@ -1,8 +1,16 @@
 {
   "Files": [
     {
-      "Id": "C:\\Tourism\\Back End\\TourismAppSln\\TravelAgent\\wwwroot\\Upload\\product001\\001.png",
-      "PackagePath": "staticwebassets\\Upload\\product001\\001.png"
+      "Id": "C:\\Tourism\\Back End\\TourismAppSln\\TravelAgent\\wwwroot\\ContactDetails\\beach.jpeg",
+      "PackagePath": "staticwebassets\\ContactDetails\\beach.jpeg"
+    },
+    {
+      "Id": "C:\\Tourism\\Back End\\TourismAppSln\\TravelAgent\\wwwroot\\Package\\70e8c617-91a0-470c-96de-f813ffd6c1d8.webp",
+      "PackagePath": "staticwebassets\\Package\\70e8c617-91a0-470c-96de-f813ffd6c1d8.webp"
+    },
+    {
+      "Id": "C:\\Tourism\\Back End\\TourismAppSln\\TravelAgent\\wwwroot\\Package\\trucking.webp",
+      "PackagePath": "staticwebassets\\Package\\trucking.webp"
     },
     {
       "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.TourPackage.Microsoft.AspNetCore.StaticWebAssets.props",

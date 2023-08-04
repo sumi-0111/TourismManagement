@@ -16,26 +16,35 @@ namespace TourPackage.Controllers
             _packageRepo= packagRepo;
         }
 
+
         [HttpPost]
-        public async Task<ActionResult<Package>> AddTourPackage(Package tourPackage)
+        public async Task<IActionResult> AddTourPackage([FromForm] Package tourPackage, IFormFile imageFile)
         {
-            var result = await _packageRepo.Add(tourPackage);
-            if (result != null)
+            try
             {
-                return Ok(result);
+                var addedPackage = await _packageRepo.Add(tourPackage, imageFile);
+                if (addedPackage != null)
+                {
+                    return CreatedAtAction("AddTourPackage", addedPackage);
+                }
+                return BadRequest("Failed to add tour package.");
             }
-            return BadRequest("Failed to add tour package.");
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
+
         [HttpPut("{id}")]
-        public async Task<ActionResult<Package>> UpdateTourPackage(int id, Package tourPackage)
+        public async Task<ActionResult<Package>> UpdateTourPackage(int id, [FromForm] Package tourPackage, [FromForm] IFormFile imageFile)
         {
             if (id != tourPackage.PackageId)
             {
                 return BadRequest("TourPackage ID mismatch.");
             }
 
-            var result = await _packageRepo.Update(tourPackage);
+            var result = await _packageRepo.Update(tourPackage, imageFile);
             if (result != null)
             {
                 return Ok(result);

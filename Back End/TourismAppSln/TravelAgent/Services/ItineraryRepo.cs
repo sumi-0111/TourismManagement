@@ -17,11 +17,11 @@ namespace TourPackage.Services
             _logger= logger;
             _environment=environment;
         }
-        public async Task<Itinerary?> Add(Itinerary item, IFormFile imageFile, IFormFile secondImageFile)
+        public async Task<Itinerary?> Add(Itinerary item, IFormFile imageFile)
         {
             try
             {
-                // Save the first image file to the specified location if it exists
+                // Save the image file to the specified location if it exists
                 if (imageFile != null && imageFile.Length > 0)
                 {
                     var uploadsFolder = Path.Combine(_environment.WebRootPath, "Itinerary");
@@ -34,21 +34,6 @@ namespace TourPackage.Services
                     }
 
                     item.ItineraryImage = fileName;
-                }
-
-                // Save the second image file to the specified location if it exists
-                if (secondImageFile != null && secondImageFile.Length > 0)
-                {
-                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "Food");
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(secondImageFile.FileName);
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await secondImageFile.CopyToAsync(stream);
-                    }
-
-                    item.FoodImage = fileName;
                 }
 
                 _context.Itineraries.Add(item);
@@ -111,24 +96,32 @@ namespace TourPackage.Services
             return null;
         }
 
-        public async Task<Itinerary?> Update(IteneraryImages item)
+        public async Task<Itinerary?> Update(Itinerary item, IFormFile imageFile)
         {
-            // Access images using item.ItineraryImageOne, item.ItineraryImageTwo, item.FoodImage
-            // Convert them to Base64 strings and store them in the corresponding properties of the existing Itinerary object
-
             try
             {
-                var existingItinerary = await _context.Itineraries.FindAsync(item.Itinerary.ItineraryId);
+                var existingItinerary = await _context.Itineraries.FindAsync(item.ItineraryId);
                 if (existingItinerary != null)
                 {
-                    existingItinerary.PackageName = item.Itinerary.PackageName;
-                    existingItinerary.Hotels = item.Itinerary.Hotels;
-                    existingItinerary.FoodDetails = item.Itinerary.FoodDetails;
-                    existingItinerary.DestinationDescription = item.Itinerary.DestinationDescription;
-                    existingItinerary.DayandVisit = item.Itinerary.DayandVisit;
-                    existingItinerary.ItineraryImageOne = item.ItineraryImageOne;
-                    existingItinerary.ItineraryImageTwo = item.ItineraryImageTwo;
-                    existingItinerary.FoodImage = item.FoodImage;
+                    existingItinerary.PackageName = item.PackageName;
+                    existingItinerary.DayandVisit = item.DayandVisit;
+                    existingItinerary.DestinationDescription = item.DestinationDescription;
+                    existingItinerary.FoodDetails = item.FoodDetails;
+
+                    // Save the new image file to the specified location if it exists
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        var uploadsFolder = Path.Combine(_environment.WebRootPath, "Itinerary");
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                        var filePath = Path.Combine(uploadsFolder, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+
+                        existingItinerary.ItineraryImage = fileName;
+                    }
 
                     await _context.SaveChangesAsync();
 

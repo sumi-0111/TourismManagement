@@ -23,7 +23,6 @@
     <Folder Include="wwwroot\Itinerary\" />
     <Folder Include="wwwroot\Hotel\" />
     <Folder Include="wwwroot\ContactDetails\" />
-    <Folder Include="wwwroot\Food\" />
     <Folder Include="wwwroot\Package\" />
   </ItemGroup>
 

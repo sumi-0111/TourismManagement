@@ -5,14 +5,15 @@ namespace TourPackage.Models
 {
     public class Package
     {
-        [Key] 
+        [Key]
         public int PackageId { get; set; }
+        [Required]
+        public string? PackageName { get; set; }
 
         [Required]
         public string? TravelAgencyName { get; set; }
 
-        [Required]
-        public string? PackageName { get; set; }
+      
         public string? Description { get; set; }
 
         [Required]
@@ -20,15 +21,17 @@ namespace TourPackage.Models
 
         [Required]
         public string? DeparturePoint { get; set; }
+        public string? StartDate { get; set; }
+        public string? EndDate { get; set; }
 
         [Required]
-        public string?  ArrivalPoint { get; set; } 
-        public int AvailablityCount { get; set; } 
+        public string? ArrivalPoint { get; set; }
+        public int AvailablityCount { get; set; }
         public int TotalDays { get; set; }
 
         [Required]
         public string? Transportation { get; set; }
         public string? PackageImage { get; set; }
-
+        public ContactDetails ContactDetails { get; set; }
     }
 }
