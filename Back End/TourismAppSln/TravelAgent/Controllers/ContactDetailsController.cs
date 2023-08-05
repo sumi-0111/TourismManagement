@@ -10,17 +10,19 @@ namespace TourPackage.Controllers
     [ApiController]
     public class ContactDetailsController : ControllerBase
     {
-        private readonly IRepo<int, ContactDetails> _contactDetailsRepo;
 
-        public ContactDetailsController(IRepo<int,ContactDetails> contactDetailsRepo)
+        private readonly IContactDetailsServices _contactDetailsServices; 
+
+        public ContactDetailsController(IContactDetailsServices contactDetailsServices)
         {
-            _contactDetailsRepo = contactDetailsRepo;
+            _contactDetailsServices = contactDetailsServices;
 
-        }
+
+    }
         [HttpPost]
         public async Task<ActionResult<ContactDetails>> AddContactDetails(ContactDetails contactDetails)
         {
-            var result = await _contactDetailsRepo.Add(contactDetails);
+            var result = await _contactDetailsServices.AddContactDetails(contactDetails);
             if (result != null)
             {
                 return Ok(result);
@@ -38,7 +40,7 @@ namespace TourPackage.Controllers
                 return BadRequest("ContactDetails ID mismatch.");
             }
 
-            var result = await _contactDetailsRepo.Update(contactDetails);
+            var result = await _contactDetailsServices.UpdateContactDetails(contactDetails);
             if (result != null)
             {
                 return Ok(result);
@@ -49,7 +51,7 @@ namespace TourPackage.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<ContactDetails>> DeleteContactDetails(int id)
         {
-            var result = await _contactDetailsRepo.Delete(id);
+            var result = await _contactDetailsServices.DeleteContactDetails(id);
             if (result != null)
             {
                 return Ok(result);
@@ -60,8 +62,8 @@ namespace TourPackage.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ContactDetails>> GetContactDetails(int id)
         {
-            var result = await _contactDetailsRepo.Get(id);
-            if (result != null)
+            var result = await _contactDetailsServices.GetContactDetails(id);
+            if (result != null) 
             {
                 return Ok(result);
             }
@@ -71,7 +73,7 @@ namespace TourPackage.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ContactDetails>>> GetAllContactDetails()
         {
-            var result = await _contactDetailsRepo.GetAll();
+            var result = await _contactDetailsServices.GetAllContactDetails();
             if (result != null)
             {
                 return Ok(result);
