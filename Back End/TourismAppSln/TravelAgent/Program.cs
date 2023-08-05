@@ -17,6 +17,15 @@ builder.Services.AddScoped<IRepo<int,Package>,PackageRepo>();
 builder.Services.AddScoped<IRepo<int,Itinerary>,ItineraryRepo>();
 //builder.Services.AddScoped<IRepo<int,Hotel>,HotelRepo>(); 
 builder.Services.AddScoped<IRepo<int,ContactDetails>,ContactDetailsRepo>();
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy("AngularCORS", options =>
+    {
+        options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+    });
+});
+
+
 var app = builder.Build(); 
 
 // Configure the HTTP request pipeline.
@@ -30,7 +39,9 @@ if (app.Environment.IsDevelopment())
 //    FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Images")), // Use app.Environment.ContentRootPath
 //    RequestPath = "/Images"
 //});
-app.UseStaticFiles();
+app.UseAuthentication();
+app.UseCors("AngularCORS");
+
 app.UseAuthorization();
 
 app.MapControllers();
