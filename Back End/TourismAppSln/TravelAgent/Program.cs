@@ -12,12 +12,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
- builder.Services.AddDbContext<TourPackageContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("myConn")));
+builder.Services.AddDbContext<TourPackageContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("myConn")));
 builder.Services.AddScoped<IRepo<int,Package>,PackageRepo>();
 builder.Services.AddScoped<IRepo<int,Itinerary>,ItineraryRepo>();
-builder.Services.AddScoped<IRepo<int,Hotel>,HotelRepo>();
+//builder.Services.AddScoped<IRepo<int,Hotel>,HotelRepo>(); 
 builder.Services.AddScoped<IRepo<int,ContactDetails>,ContactDetailsRepo>();
-var app = builder.Build();
+var app = builder.Build(); 
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

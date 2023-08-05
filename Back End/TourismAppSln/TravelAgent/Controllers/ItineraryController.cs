@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TourPackage.Interfaces;
 using TourPackage.Models;
+using TourPackage.Services;
 
 namespace TourPackage.Controllers
 {
@@ -16,30 +17,31 @@ namespace TourPackage.Controllers
             _itineraryRepo = itineraryRepo;
         }
         [HttpPost]
-        public async Task<ActionResult<Itinerary>> AddItinerary([FromForm] Itinerary itinerary, [FromForm] IFormFile imageFile)
+        public async Task<ActionResult<Itinerary>> AddContactDetails(Itinerary contactDetails)
         {
-            var result = await _itineraryRepo.Add(itinerary, imageFile);
+            var result = await _itineraryRepo.Add(contactDetails);
             if (result != null)
             {
                 return Ok(result);
             }
-            return BadRequest("Failed to add itinerary.");
+            return BadRequest("Failed to add contact details.");
         }
 
+
         [HttpPut("{id}")]
-        public async Task<ActionResult<Itinerary>> UpdateItinerary(int id, [FromForm] Itinerary itinerary, [FromForm] IFormFile imageFile)
+        public async Task<ActionResult<Itinerary>> UpdateContactDetails(int id, Itinerary contactDetails)
         {
-            if (id != itinerary.ItineraryId)
+            if (id != contactDetails.ItineraryId)
             {
-                return BadRequest("Itinerary ID mismatch.");
+                return BadRequest("ContactDetails ID mismatch.");
             }
 
-            var result = await _itineraryRepo.Update(itinerary, imageFile);
+            var result = await _itineraryRepo.Update(contactDetails);
             if (result != null)
             {
                 return Ok(result);
             }
-            return NotFound("Itinerary not found.");
+            return NotFound("ContactDetails not found.");
         }
 
         [HttpDelete("{id}")]

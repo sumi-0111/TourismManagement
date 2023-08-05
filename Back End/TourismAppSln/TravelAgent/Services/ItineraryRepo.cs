@@ -9,33 +9,16 @@ namespace TourPackage.Services
     {
         private readonly TourPackageContext _context;
         private readonly ILogger _logger; 
-        private readonly IWebHostEnvironment _environment;
 
-        public ItineraryRepo(TourPackageContext tourPackageContext, ILogger<Itinerary> logger,IWebHostEnvironment environment)
+        public ItineraryRepo(TourPackageContext tourPackageContext, ILogger<Itinerary> logger)
         {
             _context=tourPackageContext;
             _logger= logger;
-            _environment=environment;
         }
-        public async Task<Itinerary?> Add(Itinerary item, IFormFile imageFile)
+        public async Task<Itinerary?> Add(Itinerary item)
         {
             try
             {
-                // Save the image file to the specified location if it exists
-                if (imageFile != null && imageFile.Length > 0)
-                {
-                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "Itinerary");
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await imageFile.CopyToAsync(stream);
-                    }
-
-                    item.ItineraryImage = fileName;
-                }
-
                 _context.Itineraries.Add(item);
                 await _context.SaveChangesAsync();
                 return item;
@@ -43,10 +26,9 @@ namespace TourPackage.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return null;
             }
+            return null;
         }
-
 
         public async Task<Itinerary?> Delete(int key)
         {
@@ -96,49 +78,30 @@ namespace TourPackage.Services
             return null;
         }
 
-        public async Task<Itinerary?> Update(Itinerary item, IFormFile imageFile)
+        public async Task<Itinerary?> Update(Itinerary item)
         {
             try
             {
-                var existingItinerary = await _context.Itineraries.FindAsync(item.ItineraryId);
-                if (existingItinerary != null)
+                var existingDoctor = await _context.Itineraries.FindAsync(item.ItineraryId);
+                if (existingDoctor != null)
                 {
-                    existingItinerary.PackageName = item.PackageName;
-                    existingItinerary.DayandVisit = item.DayandVisit;
-                    existingItinerary.DestinationDescription = item.DestinationDescription;
-                    existingItinerary.FoodDetails = item.FoodDetails;
+                    existingDoctor.DayandVisit = item.DayandVisit;
+                    existingDoctor.DestinationName = item.DestinationName;
 
-                    // Save the new image file to the specified location if it exists
-                    if (imageFile != null && imageFile.Length > 0)
-                    {
-                        var uploadsFolder = Path.Combine(_environment.WebRootPath, "Itinerary");
-                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-                        var filePath = Path.Combine(uploadsFolder, fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await imageFile.CopyToAsync(stream);
-                        }
-
-                        existingItinerary.ItineraryImage = fileName;
-                    }
 
                     await _context.SaveChangesAsync();
 
-                    return existingItinerary;
-                }
-                else
-                {
-                    return null;
+                    return existingDoctor;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return null;
             }
+            return null;
         }
-
     }
+
 }
+
 

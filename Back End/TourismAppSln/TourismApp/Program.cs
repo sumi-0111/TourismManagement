@@ -47,6 +47,7 @@ builder.Services.AddScoped<IRepo<int,Traveller>, TravellerRepo>();
 builder.Services.AddScoped<IManageUser,ManageUserServices>();
 builder.Services.AddScoped<IGenerateToken, GenerateTokenServices>();
 builder.Services.AddScoped<IRepo<string,User>, UserRepo>();
+builder.Services.AddScoped<TravelAgentRepo>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {

@@ -10,38 +10,17 @@ namespace TourPackage.Services
     {
         private readonly TourPackageContext _context;
         private readonly ILogger<ContactDetails> _logger;
-        private readonly IWebHostEnvironment _environment;
 
-        public ContactDetailsRepo(TourPackageContext context,ILogger<ContactDetails> logger,IWebHostEnvironment environment)
+        public ContactDetailsRepo(TourPackageContext context,ILogger<ContactDetails> logger)
         {
             _context=context;
             _logger=logger;
-            _environment=environment;
         }
-        public async Task<ContactDetails?> Add([FromForm] ContactDetails item, IFormFile imageFile)
+
+        public async Task<ContactDetails?> Add(ContactDetails item)
         {
             try
             {
-                if (imageFile != null && imageFile.Length > 0)
-                {
-                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "ContactDetails");
-                    var fileName = imageFile.FileName;
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await imageFile.CopyToAsync(stream);
-                    }
-
-                    item.MapImage = fileName;
-                }
-                else
-                {
-                    // Handle the case when no image file is provided, or the file is invalid.
-                    // You can choose to throw an exception, return an error response, or set a default image, etc.
-                    throw new ArgumentException("Invalid image file.");
-                }
-
                 _context.Contacts.Add(item);
                 await _context.SaveChangesAsync();
                 return item;
@@ -49,10 +28,9 @@ namespace TourPackage.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return null;
             }
+            return null;
         }
-
 
         public async Task<ContactDetails?> Delete(int key)
         {
@@ -102,47 +80,29 @@ namespace TourPackage.Services
             return null;
         }
 
-        public async Task<ContactDetails?> Update(ContactDetails item, IFormFile imageFile)
+        public async Task<ContactDetails?> Update(ContactDetails item)
         {
             try
             {
-                var existingContact = await _context.Contacts.FindAsync(item.ContactId);
-                if (existingContact != null)
+                var existingDoctor = await _context.Contacts.FindAsync(item.ContactId);
+                if (existingDoctor != null)
                 {
-                    existingContact.Package = item.Package;
-                    existingContact.TravelAgentName = item.TravelAgentName;
-                    existingContact.Email = item.Email;
-                    existingContact.Phone = item.Phone;
+                    existingDoctor.AgentName = item.AgentName;
 
-                    // Save the new image file to the specified location if it exists
-                    if (imageFile != null && imageFile.Length > 0)
-                    {
-                        var uploadsFolder = Path.Combine(_environment.WebRootPath, "ContactDetails");
-                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-                        var filePath = Path.Combine(uploadsFolder, fileName);
+                    existingDoctor.AgentPhoneNo = item.AgentPhoneNo;
+                    existingDoctor.AgentEmail = item.AgentEmail;
 
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await imageFile.CopyToAsync(stream);
-                        }
-
-                        existingContact.MapImage = fileName;
-                    }
 
                     await _context.SaveChangesAsync();
 
-                    return existingContact;
-                }
-                else
-                {
-                    return null;
+                    return existingDoctor;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return null;
             }
+            return null;
         }
     }
 }

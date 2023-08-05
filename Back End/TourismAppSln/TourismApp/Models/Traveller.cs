@@ -9,6 +9,7 @@ namespace TourismApp.Models
         public int TravellerId { get; set; }
 
         [ForeignKey("TravellerId")]
+
         public User? User { get; set; }
         public string? TravellerName { get; set; }
         public string TravellerEmail { get; set; }

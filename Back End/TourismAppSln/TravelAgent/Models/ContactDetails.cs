@@ -7,16 +7,14 @@ namespace TourPackage.Models
     public class ContactDetails
     {
         [Key]
-        public int ContactId { get; set; } 
+        public int ContactId { get; set; }
 
+        [ForeignKey("Package")]
         public int PackageId { get; set; }
-        [ForeignKey("PackageId")]
-        [JsonIgnore]
         public Package? Package { get; set; } 
-        public string? TravelAgentName { get; set; } 
-        public string? Phone { get; set; } 
-        public string? Email  { get; set; } 
-        public string? MapImage { get; set;} 
+        public string? AgentName { get; set; } 
+        public string? AgentPhoneNo { get; set; } 
+        public string? AgentEmail { get; set; } 
 
         
     }

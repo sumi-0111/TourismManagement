@@ -18,35 +18,27 @@ namespace TourPackage.Controllers
 
         }
         [HttpPost]
-        public async Task<ActionResult<ContactDetails>> AddContactDetails([FromForm] ContactDetails contactDetails, IFormFile imageFile)
+        public async Task<ActionResult<ContactDetails>> AddContactDetails(ContactDetails contactDetails)
         {
-            try
+            var result = await _contactDetailsRepo.Add(contactDetails);
+            if (result != null)
             {
-                var addedContactDetails = await _contactDetailsRepo.Add(contactDetails, imageFile);
-                if (addedContactDetails != null)
-                {
-                    return CreatedAtAction("AddContactDetails", addedContactDetails);
-                }
-                return BadRequest("Failed to add contact details.");
+                return Ok(result);
             }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest("Failed to add contact details.");
         }
 
 
 
-
         [HttpPut("{id}")]
-        public async Task<ActionResult<ContactDetails>> UpdateContactDetails(int id, [FromForm] ContactDetails contactDetails, [FromForm] IFormFile imageFile)
+        public async Task<ActionResult<ContactDetails>> UpdateContactDetails(int id, ContactDetails contactDetails)
         {
             if (id != contactDetails.ContactId)
             {
                 return BadRequest("ContactDetails ID mismatch.");
             }
 
-            var result = await _contactDetailsRepo.Update(contactDetails, imageFile);
+            var result = await _contactDetailsRepo.Update(contactDetails);
             if (result != null)
             {
                 return Ok(result);

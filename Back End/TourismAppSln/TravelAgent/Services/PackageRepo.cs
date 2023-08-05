@@ -10,38 +10,16 @@ namespace TourPackage.Services
     {
         private readonly TourPackageContext _context;
         private readonly ILogger<Package> _logger;
-        private readonly IWebHostEnvironment _environment;
 
-        public PackageRepo(TourPackageContext context, ILogger<Package> logger,IWebHostEnvironment environment)
+        public PackageRepo(TourPackageContext context, ILogger<Package> logger)
         {
             _context=context;
             _logger=logger;
-            _environment=environment;
-        }
-        public async Task<Package?> Add([FromForm] Package item, IFormFile imageFile)
+        } 
+        public async Task<Package?> Add(Package item)
         {
-            try 
+            try
             {
-                if (imageFile != null && imageFile.Length > 0)
-                {
-                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "Package");
-                    var fileName = imageFile.FileName;
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await imageFile.CopyToAsync(stream);
-                    }
-
-                    item.PackageImage = fileName;
-                }
-                else
-                {
-                    // Handle the case when no image file is provided, or the file is invalid.
-                    // You can choose to throw an exception, return an error response, or set a default image, etc.
-                    throw new ArgumentException("Invalid image file.");
-                }
-
                 _context.Packages.Add(item);
                 await _context.SaveChangesAsync();
                 return item;
@@ -49,8 +27,8 @@ namespace TourPackage.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return null;
             }
+            return null;
         }
 
 
@@ -102,37 +80,25 @@ namespace TourPackage.Services
             return null;
         }
 
-        public async Task<Package?> Update(Package item, IFormFile imageFile)
+        public async Task<Package?> Update(Package item)
         {
             try
             {
                 var existingDoctor = await _context.Packages.FindAsync(item.PackageId);
                 if (existingDoctor != null)
                 {
+                    existingDoctor.PackageName = existingDoctor.PackageName;
                     existingDoctor.TravelAgencyName = item.TravelAgencyName;
-                    existingDoctor.PackageName = item.PackageName;
                     existingDoctor.Description = item.Description;
                     existingDoctor.Rate = item.Rate;
+                    existingDoctor.Destination = item.Destination;
                     existingDoctor.DeparturePoint = item.DeparturePoint;
+                    existingDoctor.StartDate = item.StartDate;
+                    existingDoctor.EndDate = item.EndDate;
                     existingDoctor.ArrivalPoint = item.ArrivalPoint;
                     existingDoctor.AvailablityCount = item.AvailablityCount;
-                    existingDoctor.TotalDays = item.TotalDays;
                     existingDoctor.Transportation = item.Transportation;
 
-                    // Save the new image file to the specified location if it exists
-                    if (imageFile != null && imageFile.Length > 0)
-                    {
-                        var uploadsFolder = Path.Combine(_environment.WebRootPath, "Package");
-                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-                        var filePath = Path.Combine(uploadsFolder, fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await imageFile.CopyToAsync(stream);
-                        }
-
-                        existingDoctor.PackageImage = fileName;
-                    }
 
                     await _context.SaveChangesAsync();
 

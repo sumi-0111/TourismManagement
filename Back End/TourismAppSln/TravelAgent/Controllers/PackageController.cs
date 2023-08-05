@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TourPackage.Interfaces;
 using TourPackage.Models;
+using TourPackage.Services;
 
 namespace TourPackage.Controllers
 {
@@ -17,39 +18,33 @@ namespace TourPackage.Controllers
         }
 
 
+
         [HttpPost]
-        public async Task<IActionResult> AddTourPackage([FromForm] Package tourPackage, IFormFile imageFile)
+        public async Task<ActionResult<Package>> AddContactDetails(Package contactDetails)
         {
-            try
-            {
-                var addedPackage = await _packageRepo.Add(tourPackage, imageFile);
-                if (addedPackage != null)
-                {
-                    return CreatedAtAction("AddTourPackage", addedPackage);
-                }
-                return BadRequest("Failed to add tour package.");
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Package>> UpdateTourPackage(int id, [FromForm] Package tourPackage, [FromForm] IFormFile imageFile)
-        {
-            if (id != tourPackage.PackageId)
-            {
-                return BadRequest("TourPackage ID mismatch.");
-            }
-
-            var result = await _packageRepo.Update(tourPackage, imageFile);
+            var result = await _packageRepo.Add(contactDetails);
             if (result != null)
             {
                 return Ok(result);
             }
-            return NotFound("TourPackage not found.");
+            return BadRequest("Failed to add contact details.");
+        }
+
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Package>> UpdateContactDetails(int id, Package contactDetails)
+        {
+            if (id != contactDetails.PackageId)
+            {
+                return BadRequest("ContactDetails ID mismatch.");
+            }
+
+            var result = await _packageRepo.Update(contactDetails);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return NotFound("ContactDetails not found.");
         }
 
         [HttpDelete("{id}")]

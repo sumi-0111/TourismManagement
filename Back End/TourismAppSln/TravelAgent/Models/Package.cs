@@ -13,11 +13,11 @@ namespace TourPackage.Models
         [Required]
         public string? TravelAgencyName { get; set; }
 
-      
         public string? Description { get; set; }
 
         [Required]
         public double Rate { get; set; }
+        public string? Destination { get; set; }
 
         [Required]
         public string? DeparturePoint { get; set; }
@@ -31,7 +31,8 @@ namespace TourPackage.Models
 
         [Required]
         public string? Transportation { get; set; }
-        public string? PackageImage { get; set; }
-        public ContactDetails ContactDetails { get; set; }
+        public ICollection<Images>? Image { get; set; }
+        public ICollection<Itinerary>? Itinerary { get; set; }
+        public ContactDetails? ContactDetails { get; set; } 
     }
 }
