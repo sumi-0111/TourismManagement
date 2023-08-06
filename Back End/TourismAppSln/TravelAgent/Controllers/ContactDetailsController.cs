@@ -11,9 +11,9 @@ namespace TourPackage.Controllers
     public class ContactDetailsController : ControllerBase
     {
 
-        private readonly IContactDetailsServices _contactDetailsServices; 
+        private readonly IContactService<int, ContactDetails> _contactDetailsServices; 
 
-        public ContactDetailsController(IContactDetailsServices contactDetailsServices)
+        public ContactDetailsController(IContactService<int,ContactDetails> contactDetailsServices)
         {
             _contactDetailsServices = contactDetailsServices;
 

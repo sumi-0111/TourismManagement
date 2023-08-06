@@ -10,44 +10,45 @@ namespace TourPackage.Controllers
     [ApiController]
     public class ItineraryController : ControllerBase
     {
-        private readonly IRepo<int, Itinerary> _itineraryRepo;
+        private readonly IItineraryService _itineraryService;
 
-        public ItineraryController(IRepo<int,Itinerary> itineraryRepo)
+        public ItineraryController(IItineraryService itineraryService)
         {
-            _itineraryRepo = itineraryRepo;
-        }
-        [HttpPost]
-        public async Task<ActionResult<Itinerary>> AddContactDetails(Itinerary contactDetails)
-        {
-            var result = await _itineraryRepo.Add(contactDetails);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            return BadRequest("Failed to add contact details.");
+            _itineraryService = itineraryService;
         }
 
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Itinerary>> UpdateContactDetails(int id, Itinerary contactDetails)
+        [HttpPost("createItinerary")]
+        public async Task<ActionResult<Itinerary>> AddItinerary(Itinerary itinerary)
         {
-            if (id != contactDetails.ItineraryId)
+            var addedItinerary = await _itineraryService.AddItinerary(itinerary);
+            if (addedItinerary != null)
             {
-                return BadRequest("ContactDetails ID mismatch.");
+                return Ok(addedItinerary);
             }
-
-            var result = await _itineraryRepo.Update(contactDetails);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            return NotFound("ContactDetails not found.");
+            return BadRequest("Failed to add itinerary.");
         }
 
-        [HttpDelete("{id}")]
+
+        [HttpPut("updateItinerary")]
+        public async Task<ActionResult<Itinerary>> UpdateItinerary(int id, Itinerary itinerary)
+        {
+            if (id != itinerary.ItineraryId)
+            {
+                return BadRequest("Itinerary ID mismatch.");
+            }
+
+            var updatedItinerary = await _itineraryService.UpdateItinerary(itinerary);
+            if (updatedItinerary != null)
+            {
+                return Ok(updatedItinerary);
+            }
+            return NotFound("Itinerary not found.");
+        }
+
+        [HttpDelete("deleteItinerary")]
         public async Task<ActionResult<Itinerary>> DeleteItinerary(int id)
         {
-            var deletedItinerary = await _itineraryRepo.Delete(id);
+            var deletedItinerary = await _itineraryService.DeleteItinerary(id);
             if (deletedItinerary != null)
             {
                 return Ok(deletedItinerary);
@@ -55,10 +56,10 @@ namespace TourPackage.Controllers
             return NotFound("Itinerary not found.");
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("getItineraryById")]
         public async Task<ActionResult<Itinerary>> GetItinerary(int id)
         {
-            var itinerary = await _itineraryRepo.Get(id);
+            var itinerary = await _itineraryService.GetItineraryById(id);
             if (itinerary != null)
             {
                 return Ok(itinerary);
@@ -66,10 +67,11 @@ namespace TourPackage.Controllers
             return NotFound("Itinerary not found.");
         }
 
-        [HttpGet]
+
+        [HttpGet("getAllItinerary")]
         public async Task<ActionResult<IEnumerable<Itinerary>>> GetAllItineraries()
         {
-            var itineraries = await _itineraryRepo.GetAll();
+            var itineraries = await _itineraryService.GetAllItineraries();
             if (itineraries != null && itineraries.Count > 0)
             {
                 return Ok(itineraries);

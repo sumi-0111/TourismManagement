@@ -28,6 +28,10 @@ namespace TourPackage.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                if (ex.InnerException != null)
+                {
+                    _logger.LogError(ex.InnerException.Message);
+                }
             }
             return null;
         }

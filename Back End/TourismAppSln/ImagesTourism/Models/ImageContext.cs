@@ -6,7 +6,7 @@ namespace ImagesTourism.Models
     {
         public ImageContext(DbContextOptions<ImageContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            Database.EnsureCreated(); 
 
         }
         public DbSet<ImageTourism> ImagesTourism { get; set; }

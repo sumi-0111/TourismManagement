@@ -55,7 +55,7 @@ namespace TourismApp.Services
             travelAgent.User.PasswordKey = hmac.Key;
             travelAgent.User.Email = travelAgent.TravelAgentEmail;
             travelAgent.User.Role = "Travel Agent";
-            travelAgent.TravelAgentStatus = "Not Approved";
+            travelAgent.TravelAgentStatus = "Pending";
 
             var userResult = await _userRepo.Add(travelAgent.User);
             var travelAgentResult = await _travelAgent.Add(travelAgent);

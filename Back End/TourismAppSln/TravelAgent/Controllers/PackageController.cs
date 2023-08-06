@@ -10,47 +10,48 @@ namespace TourPackage.Controllers
     [ApiController]
     public class PackageController : ControllerBase
     {
-        private readonly IRepo<int, Package> _packageRepo;
+        private readonly IPackageService _packageService;
 
-        public PackageController(IRepo<int,Package> packagRepo)
+        public PackageController(IPackageService packageService)
         {
-            _packageRepo= packagRepo;
+            _packageService = packageService;
         }
 
 
 
-        [HttpPost]
-        public async Task<ActionResult<Package>> AddContactDetails(Package contactDetails)
+        [HttpPost("packageCreate")]
+        public async Task<ActionResult<Package>> AddTourPackage(Package tourPackage)
         {
-            var result = await _packageRepo.Add(contactDetails);
+            var result = await _packageService.AddPackage(tourPackage);
             if (result != null)
             {
                 return Ok(result);
             }
-            return BadRequest("Failed to add contact details.");
+            return BadRequest("Failed to add tour package.");
         }
 
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Package>> UpdateContactDetails(int id, Package contactDetails)
+
+        [HttpPut("updatePackage")]
+        public async Task<ActionResult<Package>> UpdateTourPackage(int id, Package tourPackage)
         {
-            if (id != contactDetails.PackageId)
+            if (id != tourPackage.PackageId)
             {
-                return BadRequest("ContactDetails ID mismatch.");
+                return BadRequest("TourPackage ID mismatch.");
             }
 
-            var result = await _packageRepo.Update(contactDetails);
+            var result = await _packageService.UpdatePackage(tourPackage);
             if (result != null)
             {
                 return Ok(result);
             }
-            return NotFound("ContactDetails not found.");
+            return NotFound("TourPackage not found.");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("deletePackage")]
         public async Task<ActionResult<Package>> DeleteTourPackage(int id)
         {
-            var result = await _packageRepo.Delete(id);
+            var result = await _packageService.DeletePackage(id);
             if (result != null)
             {
                 return Ok(result);
@@ -58,10 +59,10 @@ namespace TourPackage.Controllers
             return NotFound("TourPackage not found.");
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("getPackageById")]
         public async Task<ActionResult<Package>> GetTourPackage(int id)
         {
-            var result = await _packageRepo.Get(id);
+            var result = await _packageService.GetPackageById(id);
             if (result != null)
             {
                 return Ok(result);
@@ -69,10 +70,10 @@ namespace TourPackage.Controllers
             return NotFound("TourPackage not found.");
         }
 
-        [HttpGet]
+        [HttpGet("getAllPackages")]
         public async Task<ActionResult<IEnumerable<Package>>> GetAllTourPackages()
         {
-            var result = await _packageRepo.GetAll();
+            var result = await _packageService.GetAllPackages();
             if (result != null)
             {
                 return Ok(result);

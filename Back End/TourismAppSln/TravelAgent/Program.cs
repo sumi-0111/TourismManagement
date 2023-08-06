@@ -17,7 +17,9 @@ builder.Services.AddScoped<IRepo<int,Package>,PackageRepo>();
 builder.Services.AddScoped<IRepo<int,Itinerary>,ItineraryRepo>();
 //builder.Services.AddScoped<IRepo<int,Hotel>,HotelRepo>(); 
 builder.Services.AddScoped<IRepo<int, ContactDetails>, ContactDetailsRepo>();
-builder.Services.AddScoped<IContactDetailsServices, ContactDetailsService>();
+builder.Services.AddScoped<IContactService<int,ContactDetails>, ContactDetailsService>();
+builder.Services.AddScoped<IPackageService,PackageServices>();
+builder.Services.AddScoped<IItineraryService,ItineraryService>();
 builder.Services.AddCors(opts =>
 {
     opts.AddPolicy("AngularCORS", options =>

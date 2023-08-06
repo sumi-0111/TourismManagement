@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ImagesTourism.Migrations
 {
     [DbContext(typeof(ImageContext))]
-    [Migration("20230804163006_Enjoy")]
-    partial class Enjoy
+    [Migration("20230806110628_TourPics")]
+    partial class TourPics
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,6 +36,9 @@ namespace ImagesTourism.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PackageId")
+                        .HasColumnType("int");
 
                     b.HasKey("ImageId");
 

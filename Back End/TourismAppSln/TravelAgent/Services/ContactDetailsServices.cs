@@ -7,7 +7,7 @@ using TourPackage.Models;
 
 namespace TourPackage.Services
 {
-    public class ContactDetailsService:IContactDetailsServices
+    public class ContactDetailsService : IContactService<int,ContactDetails>
     {
         private readonly IRepo<int, ContactDetails> _contactDetailsRepo;
         private readonly ILogger<ContactDetails> _logger;

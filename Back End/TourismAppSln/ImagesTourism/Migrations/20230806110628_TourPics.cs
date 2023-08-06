@@ -4,7 +4,7 @@
 
 namespace ImagesTourism.Migrations
 {
-    public partial class Enjoy : Migration
+    public partial class TourPics : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +15,8 @@ namespace ImagesTourism.Migrations
                     ImageId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PackageId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
