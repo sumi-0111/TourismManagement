@@ -1,4 +1,5 @@
-﻿using TourismApp.Models.DTO;
+﻿using TourismApp.Models;
+using TourismApp.Models.DTO;
 
 namespace TourismApp.Interfaces
 {

@@ -54,7 +54,7 @@ namespace TourismApp.Services
         {
             try
             {
-                var travelAgent = await _context.TravelAgents.Include(i => i.User).FirstOrDefaultAsync(i => i.TravelAgentId == key);
+                var travelAgent = await _context.TravelAgents.FirstOrDefaultAsync(i => i.TravelAgentId == key);
                 return travelAgent;
             }
             catch (Exception ex)
@@ -86,15 +86,15 @@ namespace TourismApp.Services
                 var travelAgent = await Get(item.TravelAgentId);
                 if (travelAgent != null)
                 {
-                    travelAgent.TravelAgentId = item.TravelAgentId;
                     travelAgent.TravelAgentName = item.TravelAgentName;
-                    travelAgent.User = item.User;
                     travelAgent.TravelAgentEmail = item.TravelAgentEmail;
                     travelAgent.TravelAgentPhoneNo = item.TravelAgentPhoneNo;
-                    travelAgent.TravelAgentEmail = item.TravelAgentEmail;
+                    travelAgent.CompanyName = item.CompanyName;
                     travelAgent.CompanyAddress = item.CompanyAddress;
                     travelAgent.TravelAgentStatus = item.TravelAgentStatus;
                     travelAgent.TravelAgentPhoneNo = item.TravelAgentPhoneNo;
+                    await _context.SaveChangesAsync();
+
                     return travelAgent;
                 }
             }

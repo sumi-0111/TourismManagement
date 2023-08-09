@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TourismApp.Interfaces;
+using TourismApp.Models;
 using TourismApp.Models.DTO;
 
 namespace TourismApp.Services
@@ -21,7 +22,10 @@ namespace TourismApp.Services
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.NameId,user.UserId.ToString()),
-                new Claim(ClaimTypes.Role,user.Role)
+                new Claim(ClaimTypes.Role,user.Role),
+                
+                //new Claim("travelAgentStatus", travelAgent.TravelAgentStatus)
+
 
             };
             var cred = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);

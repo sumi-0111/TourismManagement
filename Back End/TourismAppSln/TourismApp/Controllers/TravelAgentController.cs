@@ -6,7 +6,7 @@ using TourismApp.Services;
 
 namespace TourismApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[Action]")]
     [ApiController]
     public class TravelAgentController : ControllerBase
     {
@@ -15,6 +15,7 @@ namespace TourismApp.Controllers
         public TravelAgentController(TravelAgentRepo travelAgentRepo)
         {
             _travelAgentRepo = travelAgentRepo;
+            
         }
 
         [HttpGet]
@@ -28,6 +29,22 @@ namespace TourismApp.Controllers
             }
 
             return Ok(travellers);
+        }
+        [HttpGet]
+        public async Task<ActionResult<ICollection<TravelAgent>>> GetAllTravelAgents()
+        {
+            try
+            {
+                var travelAgents = await _travelAgentRepo.GetAll();
+                if (travelAgents != null)
+                    return Ok(travelAgents);
+                else
+                    return NotFound(); 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500); 
+            }
         }
     }
 }

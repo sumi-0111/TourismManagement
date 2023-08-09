@@ -16,8 +16,7 @@ namespace ImagesTourism.Services
         public async Task<ImageTourism> AddTourImage(int packageId, IFormFile image, string name)
         {
             // Connect to Azurite Blob Storage
-            string connectionString = "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:8888/devstoreaccount1;";
-            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            string connectionString = "BlobEndpoint=http://127.0.0.1:8888/devstoreaccount1;SharedAccessSignature=?sv=2021-10-04&ss=btqf&srt=sco&st=2023-08-09T04%3A57%3A19Z&se=2023-08-10T04%3A57%3A19Z&sp=rwdxftlacup&sig=45N8R%2F7b46dah21ZVOqhWK%2FUHdCNCTRQb%2B0RLciWrNs%3D"; BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient("samples-workitems");
 

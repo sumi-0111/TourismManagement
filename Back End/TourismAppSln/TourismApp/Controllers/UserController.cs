@@ -11,16 +11,18 @@ namespace TourismApp.Controllers
     [ApiController]
     [EnableCors("CORS")]
     public class UserController : ControllerBase
-    {
+    { 
         private readonly IManageUser _manageUser;
         private readonly IRepo<int, TravelAgent> _travelAgentRepo;
         private readonly IRepo<int, Traveller> _travellerRepo;
+        private readonly IAdminService _adminService;
 
-        public UserController(IManageUser manageUser, IRepo<int,TravelAgent> travelAgentRepo, IRepo<int,Traveller> travellerRepo)
+        public UserController(IManageUser manageUser, IRepo<int,TravelAgent> travelAgentRepo, IRepo<int,Traveller> travellerRepo,IAdminService adminService)
         {
             _manageUser = manageUser;
             _travelAgentRepo = travelAgentRepo;
             _travellerRepo = travellerRepo;
+            _adminService = adminService;
         }
         [HttpPost("TravelAgent")]
         [ProducesResponseType(typeof(ActionResult<UserDTO>), StatusCodes.Status201Created)]
@@ -60,5 +62,102 @@ namespace TourismApp.Controllers
             }
             return BadRequest("Unable to login");
         }
-    }
+        [HttpPost("approve")]
+        [ProducesResponseType(typeof(ActionResult<TravelAgentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<TravelAgentDTO>> ApproveAgent(TravelAgentDTO agentStatus)
+        {
+            try
+            {
+                var result = await _manageUser.ApprovedAgent(agentStatus);
+
+                if (result != null)
+                    return Ok(result);
+
+                return BadRequest("Unable to approve agent");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred during agent approval: {ex.Message}");
+            }
+        }
+        [HttpPost("disapprove")]
+        [ProducesResponseType(typeof(ActionResult<TravelAgentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<TravelAgentDTO>> DisapproveAgent(TravelAgentDTO agentStatus)
+        {
+            try
+            {
+                var result = await _manageUser.DisapproveAgent(agentStatus);
+
+                if (result != null)
+                    return Ok(result);
+
+                return BadRequest("Unable to disapprove agent");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred during agent disapproval: {ex.Message}");
+            }
+        }
+
+        //[HttpPost("demo")]
+        //[ProducesResponseType(typeof(ActionResult<TravelAgent>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public async Task<ActionResult<TravelAgent>> ApprovedAgenta(TravelAgent agentStatus)
+        //{
+        //    try
+        //    {
+        //        var result = await _manageUser.ApprovedAgenta(agentStatus);
+
+        //        if (result != null)
+        //            return Ok(result);
+
+        //        return BadRequest("Unable to approve agent");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest($"An error occurred during agent approval: {ex.Message}");
+        //    }
+        //}
+        //[HttpPost("demo")]
+        //[ProducesResponseType(typeof(ActionResult<TravelAgent>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public async Task<ActionResult<TravelAgent>> DisApprovedAgenta(TravelAgent agentStatus)
+        //{
+        //    try
+        //    {
+        //        var result = await _manageUser.DisApprovedAgenta(agentStatus);
+
+        //        if (result != null)
+        //            return Ok(result);
+
+        //        return BadRequest("Unable to Disapprove agent");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest($"An error occurred during agent disapproval: {ex.Message}");
+        //    }
+        //}
+
+        [HttpPut]
+        [ProducesResponseType(typeof(TravelAgent), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]//Failure Response
+        public async Task<ActionResult<TravelAgent?>> UpdateAgentStatus(StatusDTO status)
+        {
+            try
+            {
+                var agent = await _adminService.UpdateStatus(status);
+                if (agent != null)
+                {
+                    return Ok(agent);
+                }
+                return BadRequest("Not updated!");
+            }
+            catch (Exception)
+            {
+                return BadRequest("Backend error!");
+            }
+        }
+    } 
 }

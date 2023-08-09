@@ -11,16 +11,73 @@ namespace TourismApp.Services
     {
         private readonly IRepo<string, User> _userRepo;
         private readonly IGenerateToken _tokenService;
-        private readonly IRepo<int, TravelAgent> _travelAgent;
+        private readonly IRepo<int, TravelAgent> _travelAgentRepo;
         private readonly IRepo<int, Traveller> _travellerRepo;
 
         public ManageUserServices(IRepo<string,User> userRepo,IGenerateToken tokenService,IRepo<int,TravelAgent> travelAgent, IRepo<int,Traveller> travellerRepo)
         {
             _userRepo = userRepo;
             _tokenService = tokenService;
-            _travelAgent=travelAgent;
+            _travelAgentRepo=travelAgent;
             _travellerRepo = travellerRepo;
         }
+
+        public async Task<TravelAgentDTO> ApprovedAgent(TravelAgentDTO agentStatus)
+        {
+            var agent = await _travelAgentRepo.Get(agentStatus.TravelAgentId);
+
+            if (agent != null)
+            {
+                agent.TravelAgentStatus = "Approved";
+                await _travelAgentRepo.Update(agent);
+                return new TravelAgentDTO
+                {
+                    TravelAgentId = agent.TravelAgentId,
+                    TravelAgentStatus = agent.TravelAgentStatus
+                };
+            }
+            return null;
+        }
+
+        public   async Task<TravelAgent> ApprovedAgenta(TravelAgent user)
+        {
+            var agent = await _travelAgentRepo.Get(user.TravelAgentId);
+
+            if (agent != null)
+            {
+                agent.TravelAgentStatus = "Approved";
+                await _travelAgentRepo.Update(agent);
+                return new TravelAgent
+                {
+                    TravelAgentId = agent.TravelAgentId,
+                    TravelAgentStatus = agent.TravelAgentStatus
+                };
+            }
+            return null;
+        }
+
+        public async Task<TravelAgentDTO> DisapproveAgent(TravelAgentDTO agentStatus)
+        {
+            var agent = await _travelAgentRepo.Get(agentStatus.TravelAgentId);
+
+            if (agent != null)
+            {
+                agent.TravelAgentStatus = "Not Approved";
+                await _travelAgentRepo.Update(agent);
+                return new TravelAgentDTO
+                {
+                    TravelAgentId = agent.TravelAgentId,
+                    TravelAgentStatus = agent.TravelAgentStatus
+                };
+            }
+            return null;
+        }
+
+        public Task<TravelAgent> DisApprovedAgenta(TravelAgent user)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<UserDTO> Login(UserDTO user)
         {
             var userData = await _userRepo.Get(user.Email);
@@ -58,7 +115,7 @@ namespace TourismApp.Services
             travelAgent.TravelAgentStatus = "Pending";
 
             var userResult = await _userRepo.Add(travelAgent.User);
-            var travelAgentResult = await _travelAgent.Add(travelAgent);
+            var travelAgentResult = await _travelAgentRepo.Add(travelAgent);
 
             if (userResult != null && travelAgentResult != null)
             {

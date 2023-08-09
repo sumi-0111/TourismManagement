@@ -22,12 +22,15 @@ namespace TourPackage.Controllers
         [HttpPost]
         public async Task<ActionResult<ContactDetails>> AddContactDetails(ContactDetails contactDetails)
         {
-            var result = await _contactDetailsServices.AddContactDetails(contactDetails);
-            if (result != null)
+            try
             {
+                var result = await _contactDetailsServices.AddContactDetails(contactDetails);
                 return Ok(result);
             }
-            return BadRequest("Failed to add contact details.");
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to add contact details. Error: {ex.Message}");
+            }
         }
 
 
@@ -35,28 +38,42 @@ namespace TourPackage.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<ContactDetails>> UpdateContactDetails(int id, ContactDetails contactDetails)
         {
-            if (id != contactDetails.ContactId)
+            try
             {
-                return BadRequest("ContactDetails ID mismatch.");
-            }
+                if (id != contactDetails.ContactId)
+                {
+                    return BadRequest("ContactDetails ID mismatch.");
+                }
 
-            var result = await _contactDetailsServices.UpdateContactDetails(contactDetails);
-            if (result != null)
-            {
-                return Ok(result);
+                var result = await _contactDetailsServices.UpdateContactDetails(contactDetails);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return NotFound("ContactDetails not found.");
             }
-            return NotFound("ContactDetails not found.");
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to update contact details. Error: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<ContactDetails>> DeleteContactDetails(int id)
         {
-            var result = await _contactDetailsServices.DeleteContactDetails(id);
-            if (result != null)
+            try
             {
-                return Ok(result);
+                var result = await _contactDetailsServices.DeleteContactDetails(id);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return NotFound("ContactDetails not found.");
             }
-            return NotFound("ContactDetails not found.");
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to delete contact details. Error: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
